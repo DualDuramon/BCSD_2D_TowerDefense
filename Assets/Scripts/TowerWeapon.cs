@@ -13,6 +13,8 @@ public class TowerWeapon : MonoBehaviour
     [SerializeField]
     private float           attackRate = 0.5f;  //공격 속도
     [SerializeField]
+    private int             attackDamage = 1;
+    [SerializeField]
     private float           attackRange = 2.0f; //공격범위
 
     private WeaponState     weaponeState = WeaponState.SearchTarget;    //타워 무기의 상태
@@ -96,6 +98,6 @@ public class TowerWeapon : MonoBehaviour
 
     private void SpawnProjectile() {    //발사체 생성
         GameObject clone = Instantiate(projectilePrefab, spawnPoint.position, Quaternion.identity);
-        clone.GetComponent<Projectile>().Setup(attackTarget);   //생성된 발사체에게 공격대상 정보 제공
+        clone.GetComponent<Projectile>().Setup(attackTarget, attackDamage);   //생성된 발사체에게 공격대상 정보 제공
     }
 }

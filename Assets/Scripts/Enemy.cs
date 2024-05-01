@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EnemyDestroyType { Kill = 0, Arrive }
+
 public class Enemy : MonoBehaviour
 {
     private int             wayPointCount;      //이동 경로 개수
@@ -9,6 +11,8 @@ public class Enemy : MonoBehaviour
     private int             currentIdx = 0;     // 현재 목표지점 인덱스
     private Movement2D      movement2D;         // 오브젝트 이동 제어
     private EnemySpawner    enemySpawner;          // 적을 삭제 할 때 EnemySpawner에 알려서 삭제함
+    [SerializeField]
+    private int gold = 10;  //적 사망시 획득 가능한 골드
 
     public void Setup(EnemySpawner enemySpawner , Transform[] wayPoints) {
         movement2D = GetComponent<Movement2D>();
@@ -55,13 +59,14 @@ public class Enemy : MonoBehaviour
         }
         else {  //마지막 목표지점 (wayPoints)면 삭제
             //Destroy(gameObject);
-            OnDie();
+            gold = 0;   //goal에 도착해서 죽는거면 돈 안주도록
+            OnDie(EnemyDestroyType.Arrive);
         }
     }
 
-    public void OnDie() {
+    public void OnDie(EnemyDestroyType type) {
         //본인이 삭제될 때 enemySpawner에게 자신을 넘겨 삭제함.
-        enemySpawner.DestroyEnemy(this);
+        enemySpawner.DestroyEnemy(type, this, gold);
     }
 }
 
