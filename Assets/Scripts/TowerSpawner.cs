@@ -54,7 +54,9 @@ public class TowerSpawner : MonoBehaviour
         playerGold.CurrentGold -= towerTemplate[towerType].weapon[0].cost;             //타워 건설에 필요한 만큼의 골드 감소
         Vector3 position = tileTransform.position + Vector3.back;           //선택한 타일의 위치에 타워 건설 (타일보다 Z축 -1 위치에 배치)
         GameObject clone = Instantiate(towerTemplate[towerType].towerPrefab, position, Quaternion.identity); //제공받은 위치에 타일 생성 및 클론저장
-        clone.GetComponent<TowerWeapon>().Setup(enemySpawner, playerGold, tile);      //타워 무기에 enemySpawner 전달
+        clone.GetComponent<TowerWeapon>().Setup(this, enemySpawner, playerGold, tile);      //타워 무기에 TowerSpawner, enemySpawner, playerGold, tile 전달
+
+        OnBuffAllBuffTowers();      //새로 배치되는 타워가 버프타워 주변에 배치되면 버프효과를 받을 수 있도록 모든 버프 타워의 버프효과 갱신.
 
         Destroy(followTowerClone);                                          //타워 배치 후 마우스를 따라다니는 임시 타워 삭제
         StopCoroutine("OnTowerCancelSystem");                               //타워 건설을 취소할 수 있는 코루틴 함수 중지.
@@ -69,6 +71,18 @@ public class TowerSpawner : MonoBehaviour
             }
 
             yield return null;
+        }
+    }
+
+    public void OnBuffAllBuffTowers() { //맵 상의 모든 버프타워의 버프효과를 갱신하는 함수.
+        GameObject[] towers = GameObject.FindGameObjectsWithTag("Tower");
+
+        for (int i = 0; i < towers.Length; i++) {
+            TowerWeapon weapon = towers[i].GetComponentInParent<TowerWeapon>();
+
+            if(weapon.WeaponType == WeaponType.Buff) {
+                weapon.OnBuffAroundTower();
+            }
         }
     }
 }

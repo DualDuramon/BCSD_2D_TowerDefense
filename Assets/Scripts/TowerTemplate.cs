@@ -12,6 +12,8 @@ public class TowerTemplate : ScriptableObject
         public Sprite sprite;   //타워 이미지(UI)
         public float damage;    // 공격력
         public float slow;      //감속퍼센트(0.2 = 20%)
+        public float buff;      //공격력 증가율(0.2 = +20%)
+
         public float rate;      //공격속도
         public float range;     //공격범위
         public int cost;        //필요 골드(0레벨 : 건설 / 1~레벨 : 업그레이드)
